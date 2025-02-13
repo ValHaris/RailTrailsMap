@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rail Trails</title>
+  </head>
+  <body>
+    <div id="sidebar">
+      <h1>RailTrails</h1>
+      This is a visualization of cycleways on abandoned railway lines.
+
+      <h2>Scope</h2>
+      Currently the scope is Europe.
+
+      <h2>Updates</h2>
+      <p>
+      The map is <i>not</i> rendered from live data.
+      It is planned to be updated occasionally, but no guarantees are made. 
+      </p><p>
+      Current data from:
+      2025-02-11
+      </p>
+
+      <h2>Criteria</h2>
+      <ul>
+        <li><tt>railway=abandoned</tt></li>
+        <li>and one or more of
+          <ul>
+            <li><tt>highway=cycleway</tt></li>
+            <li><tt>highway=path and bicycle=designated</tt></li>
+            <li><tt>highway=track and (bicycle=yes or tracktype=grade1)</tt></li>
+            <li>on a relation with <tt>route=bicyle</tt></li>
+          </ul>
+        </li>
+      </ul>
+
+      <h2>Source Code</h2>
+      Available on <a href="https://github.com/ValHaris/RailTrailsMap">GitHub</a>
+      
+    </div>
+    <div id="map"></div>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

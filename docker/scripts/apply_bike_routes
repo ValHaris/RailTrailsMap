@@ -1,0 +1,52 @@
+#!/usr/bin/python3
+import psycopg2
+from itertools import islice
+from tqdm import tqdm
+
+# Database connection parameters
+db_params = {
+    'dbname': 'gis',
+    'user': 'renderer',
+    'password': 'renderer',
+    'host': 'localhost',
+    'port': '5432'
+}
+
+def batched(iterable, n):
+    if n < 1:
+        raise ValueError('n must be at least one')
+    iterator = iter(iterable)
+    while batch := tuple(islice(iterator, n)):
+        yield batch
+
+def get_connection(db_params):
+    """Establish a connection to the PostgreSQL database."""
+    return psycopg2.connect(**db_params)
+
+def get_ways(conn):
+    query = """
+    select parts from planet_osm_rels where id in (select -osm_id from planet_osm_line where route = 'bicycle');
+    """
+    with conn.cursor() as cursor:
+        cursor.execute(query)
+        results = cursor.fetchall()
+        for row in results:
+            yield row[0]
+
+def set_ways(conn, batch):
+    query = """
+    update planet_osm_line set route = 'bicycle' where osm_id = ANY(%s);
+    """
+    with conn.cursor() as cursor:
+        cursor.execute(query, (batch,))
+        conn.commit()
+
+if __name__ == "__main__":
+    with get_connection(db_params) as conn:
+        ways = set()
+        for row in get_ways(conn):
+            ways.update(row)
+        
+        print(f"Updating {len(ways)} ways")
+        for b in tqdm( batched(ways, n=1000), total=len(ways)//1000 ):
+            set_ways(conn, list(b))

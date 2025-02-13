@@ -1,0 +1,63 @@
+*** orig/run.sh	2025-02-12 14:53:31.976443479 +0100
+--- scripts/run.sh	2025-02-13 15:07:49.936619373 +0100
+***************
+*** 121,126 ****
+--- 121,128 ----
+          sudo -E -u renderer python3 /data/style/scripts/get-external-data.py -c /data/style/external-data.yml -D /data/style/data
+      fi
+  
++     sudo -u renderer /usr/local/bin/apply_bike_routes
++ 
+      # Register that data has changed for mod_tile caching purposes
+      sudo -u renderer touch /data/database/planet-import-complete
+  
+***************
+*** 129,135 ****
+      exit 0
+  fi
+  
+! if [ "$1" == "run" ]; then
+      # Clean /tmp
+      rm -rf /tmp/*
+  
+--- 131,137 ----
+      exit 0
+  fi
+  
+! if [ "$1" == "run" ] || [ "$1" == "generate" ]; then
+      # Clean /tmp
+      rm -rf /tmp/*
+  
+***************
+*** 184,194 ****
+      stop_handler() {
+          kill -TERM "$child"
+      }
+!     trap stop_handler SIGTERM
+  
+      sudo -u renderer renderd -f -c /etc/renderd.conf &
+      child=$!
+!     wait "$child"
+  
+      service postgresql stop
+  
+--- 186,204 ----
+      stop_handler() {
+          kill -TERM "$child"
+      }
+!     if [ "$1" == "run" ]; then
+!         trap stop_handler SIGTERM
+!     fi
+  
+      sudo -u renderer renderd -f -c /etc/renderd.conf &
+      child=$!
+! 
+!     if [ "$1" == "run" ]; then
+!         wait "$child"
+!     else
+!         /usr/local/bin/generate_all_levels
+!         stop_handler
+!     fi
+  
+      service postgresql stop
+  

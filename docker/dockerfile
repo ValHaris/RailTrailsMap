@@ -1,0 +1,11 @@
+from overv/openstreetmap-tile-server as original
+
+RUN apt-get update \
+&& apt-get install -y --no-install-recommends \
+python3-tqdm python3-pil patch
+COPY scripts/* /usr/local/bin/
+COPY style/* /home/renderer/src/openstreetmap-carto-backup/
+COPY style/style/* /home/renderer/src/openstreetmap-carto-backup/style/
+COPY run.sh.diff /tmp/
+RUN patch /run.sh /tmp/run.sh.diff
+

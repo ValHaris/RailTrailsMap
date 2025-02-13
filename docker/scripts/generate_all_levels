@@ -1,0 +1,57 @@
+#!/usr/bin/python3
+
+import subprocess
+from types import SimpleNamespace
+from pathlib import Path
+import re
+import threading
+
+from tqdm import tqdm
+
+import extract_non_transparent_tiles as ex
+
+def write_stdin(process, input_data):
+    process.stdin.write(input_data)
+    process.stdin.close()
+
+
+output_dir = Path("/data/extracted-tiles/")
+meta_tile_dir = Path("/data/tiles/default")
+
+switching_level = 9
+max_zoom = 16
+
+if __name__ == "__main__":
+    for zoom in range(3, max_zoom+1):
+        if zoom <= switching_level:
+            subprocess.run(["render_list", "-a", "-z", str(zoom), "-Z", str(zoom)], check=True)
+        else:
+            next_level_tiles = meta_tile_dir / str(zoom-1) / "next_level_tiles.txt"
+            with open(next_level_tiles, "r") as f:
+                next_tiles = f.read()
+
+            total_tiles = len(next_tiles.split("\n"))
+
+            command = ["render_list", "-n", str(32)]
+            process = subprocess.Popen(command, stdin=subprocess.PIPE, bufsize=1, text=True, stdout=subprocess.PIPE)
+            stdin_thread = threading.Thread(target=write_stdin, args=(process, next_tiles))
+            stdin_thread.start()
+
+            with tqdm(desc=f"Generating for zoom level {zoom}/{max_zoom}", total=total_tiles ) as pbar:
+                last_count = 0
+                for line in process.stdout:
+                    if m := re.match(r"Total tiles handled from input: Rendered (\d+) tiles .*", line):
+                        count = int(m.group(1))
+                        pbar.update(count - last_count)
+                        # we should have only one message of render_list per second
+                        # but if some tiles have been pre-generateed, the first step might be huge and delay further display updates
+                        pbar.refresh() 
+                        last_count = count
+                        print(f"*!*!*! {count}/{total_tiles}")
+
+            process.stdout.close()
+            process.wait()
+            stdin_thread.join()
+
+        ex.run(SimpleNamespace(file_path=meta_tile_dir / str(zoom), verbose=False, outputdir=output_dir))
+
