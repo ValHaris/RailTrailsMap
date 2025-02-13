@@ -1,11 +1,17 @@
 
-# Motivation
+# Idea
+
+Show all cycling paths on former railway lines on map. 
  
 # Concept
 
-The map is served from static images.
+The map is composed of 2 layers:
+1. As base layer the standard OpenSteetMap map, served directly from OpenStreetmap
+1. As overlay a semi-transparent layer highlighting the rail trails.
 
-The allows to:
+The overlay map is served from static images.
+
+This allows to:
 - keep hosting costs down
 - have less software running on the server, reducing complexity and attack surface
 - run an immutable server
@@ -22,7 +28,7 @@ The web server is configured to return a fully transparent default tile for any 
 
 ## Rendering optimizations
 
-For zoom levers up to level 9, all meta tiles for the whole planet will be rendered.
+For zoom levels up to level 9, all meta tiles for the whole planet will be rendered.
 For zoom levels above that, only those tiles will be rendered where the corresponding tile on the lower zoom level was non-empty.
 
 # Implementation
