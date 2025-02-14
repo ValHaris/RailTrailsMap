@@ -43,7 +43,7 @@ Layer:
         (SELECT
             way
           FROM planet_osm_line
-          where railway in ( 'abandoned' , 'disused' )
+          where railway in ( 'abandoned' , 'disused', 'razed' )
                and (
                   highway = 'cycleway' 
                   or (highway = 'path' and bicycle = 'designated') 
