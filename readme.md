@@ -2,6 +2,8 @@
 # Idea
 
 Show all cycling paths on former railway lines on map. 
+
+Currently hosted at http://railtrails.ineranves.de
  
 # Concept
 
@@ -30,6 +32,23 @@ The web server is configured to return a fully transparent default tile for any 
 
 For zoom levels up to level 9, all meta tiles for the whole planet will be rendered.
 For zoom levels above that, only those tiles will be rendered where the corresponding tile on the lower zoom level was non-empty.
+
+
+# Usage
+
+Build the container:
+
+    cd docker
+    docker build -t railtrails/railtrails
+
+Check the instructions at the [base docker container](https://github.com/Overv/openstreetmap-tile-server).
+
+The style files are integrated into the container, they don't need to be base
+
+To pregenerate the tiles, use the new `generate` parameter:
+
+    docker run --shm-size=512m -v osm-data:/data/database/ railtrails/railtrails generate
+
 
 # Implementation
 

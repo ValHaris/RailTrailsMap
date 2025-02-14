@@ -47,7 +47,6 @@ if __name__ == "__main__":
                         # but if some tiles have been pre-generateed, the first step might be huge and delay further display updates
                         pbar.refresh() 
                         last_count = count
-                        print(f"*!*!*! {count}/{total_tiles}")
 
             process.stdout.close()
             process.wait()

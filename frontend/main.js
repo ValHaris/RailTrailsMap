@@ -23,6 +23,7 @@ const map = new Map({
     new TileLayer({
       source: new XYZ({
               url: 'http://railtrails.ineranves.de/tiles/{z}/{x}/{y}.png',
+              // url: 'http://localhost/{z}/{x}/{y}.png',  // for testing
               maxZoom: 16,
               minZoom: 4
             })
