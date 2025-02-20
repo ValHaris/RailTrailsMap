@@ -298,14 +298,6 @@ function filter_basic_tags_rel (keyvalues, numberofkeys)
     return 0, keyvalues
 end
 
-function table_to_string(tbl)
-    local result = "{"
-    for k, v in pairs(tbl) do
-        result = result .. tostring(k) .. "=" .. tostring(v) .. ", "
-    end
-    result = result .. "}"
-    return result
-end
 
 -- Filtering on ways
 function filter_tags_way (keyvalues, numberofkeys)
@@ -322,12 +314,17 @@ function filter_tags_way (keyvalues, numberofkeys)
         return 1, keyvalues, polygon, roads
     end
 
-    if keyvalues["abandoned:railway"] or keyvalues["razed:railway"] then
+    if keyvalues["abandoned:railway"] or keyvalues["razed:railway"] or keyvalues["historic:railway"]=="rail" or
+        (keyvalues["was:railway"] and keyvalues["was:railway"] ~= "no") then
         keyvalues["railway"] = "abandoned"
     end
 
-    if (keyvalues["railway"] ~= "abandoned") then
+    if (keyvalues["railway"] ~= "abandoned" and not keyvalues["highway"]) then
         return 1, keyvalues, polygon, roads
+    end
+
+    if (keyvalues["railtrail"] == "yes" or keyvalues["cycleway:type"] == "railtrail") then
+        keyvalues["railway"] = "railtrail"
     end
 
     polygon = isarea(keyvalues)
@@ -362,7 +359,7 @@ function filter_tags_relation_member (keyvalues, keyvaluemembers, roles, memberc
         return 1, keyvalues, members_superseded, 0, 0, 0
     end
 
-    if ((type ~= "route") or (keyvalues[route] == "bicycle")) then
+    if ((type ~= "route") or (keyvalues["route"] ~= "bicycle")) then
         return 1, keyvalues, members_superseded, 0, 0, 0
     else
         keyvalues.z_order = z_order(keyvalues)

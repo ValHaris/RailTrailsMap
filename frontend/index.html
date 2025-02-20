@@ -7,11 +7,8 @@
   </head>
   <body>
     <div id="sidebar">
-      <h1>RailTrails</h1>
+      <h1>RailTrails for cycling</h1>
       This is a visualization of cycleways on abandoned railway lines.
-
-      <h2>Scope</h2>
-      Currently the scope is Europe.
 
       <h2>Updates</h2>
       <p>
@@ -19,19 +16,25 @@
       It is planned to be updated occasionally, but no guarantees are made. 
       </p><p>
       Showing data as of: 
-      2025-02-11
+      2025-02-10
       </p>
 
       <h2>Criteria</h2>
-      The (simplified) criteria for a way to be considered a rail trail are:
+      A way is considere a rail trail when it is:
       <ul>
-        <li><tt>railway=abandoned</tt></li>
-        <li>and one or more of
+        <li><tt>railtrail=yes</tt></li>
+        <li>or <tt>cycleway:type=railtrail</tt></li>
+        <li>or 
           <ul>
-            <li><tt>highway=cycleway</tt></li>
-            <li><tt>highway=path and bicycle=designated</tt></li>
-            <li><tt>highway=track and (bicycle=yes or tracktype=grade1)</tt></li>
-            <li>on a relation with <tt>route=bicyle</tt></li>
+            <li><tt>railway=abandoned</tt></li>
+            <li>and one or more of
+              <ul>
+                <li><tt>highway=cycleway</tt></li>
+                <li><tt>highway=path and bicycle=designated</tt></li>
+                <li><tt>highway=track and (bicycle=yes or tracktype in(grade1, grade2))</tt></li>
+                <li>on a relation with <tt>route=bicyle</tt></li>
+              </ul>
+            </li>
           </ul>
         </li>
       </ul>
