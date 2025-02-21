@@ -23,30 +23,52 @@ def get_connection(db_params):
     """Establish a connection to the PostgreSQL database."""
     return psycopg2.connect(**db_params)
 
-def get_ways(conn):
-    query = """
-    select parts from planet_osm_rels where id in (select -osm_id from planet_osm_line where route = 'bicycle');
-    """
+def query(conn, query):
     with conn.cursor() as cursor:
         cursor.execute(query)
         results = cursor.fetchall()
         for row in results:
-            yield row[0]
+            yield row
 
-def set_ways(conn, batch):
-    query = """
-    update planet_osm_line set route = 'bicycle' where osm_id = ANY(%s);
-    """
+def list_to_dict(lst):
+    if len(lst) % 2 != 0:
+        return {}
+    return dict(zip(lst[0::2], lst[1::2]))
+
+
+GET_BIKE_ROUTES = "select parts, tags from planet_osm_rels where 'bicycle' = ANY(tags);"
+GET_RAILTRAIL_ROUTES = "select tags from planet_osm_rels where 'railtrail' = ANY(tags);"
+
+def set_ways(conn, batch, update_statement):
+    query = f"update planet_osm_line set {update_statement} where osm_id = ANY(%s);"
     with conn.cursor() as cursor:
         cursor.execute(query, (batch,))
         conn.commit()
 
 if __name__ == "__main__":
     with get_connection(db_params) as conn:
-        ways = set()
-        for row in get_ways(conn):
-            ways.update(row)
+
+        # With the current database schema, tags are just an array of strings, making it difficult to query key-value combinations.
+        # Hence this script just searches for keywords in the tags and then checks key-values on python side.
+
+        if any( filter( lambda x: list_to_dict(x[0]).get("route") != "bicycle", query(conn, GET_RAILTRAIL_ROUTES) )):
+            print("*** Found railtrails that are not bicycle routes! ***")
+
+        all_bike_routs = set()
+        bike_trail_routes = set()
+        for row in query(conn, GET_BIKE_ROUTES ):
+            tags = list_to_dict(row[1])
+            if tags.get("route") == "bicycle":
+                all_bike_routs.update(row[0])
+                if tags.get("railtrail") == "yes":
+                    bike_trail_routes.update(row[0])
         
-        print(f"Updating {len(ways)} ways")
-        for b in tqdm( batched(ways, n=1000), total=len(ways)//1000 ):
-            set_ways(conn, list(b))
+        print(f"Updating {len(all_bike_routs)} ways for bike routes")
+        for b in tqdm( batched(all_bike_routs, n=1000), total=len(all_bike_routs)//1000 ):
+            set_ways(conn, list(b), "route = 'bicycle'")
+
+
+        print(f"Updating {len(bike_trail_routes)} railtrails")
+        for b in tqdm( batched(bike_trail_routes, n=100), total=len(bike_trail_routes)//100 ):
+            set_ways(conn, list(b), "railway = 'railtrailrel'")
+

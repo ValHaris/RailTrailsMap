@@ -32,7 +32,7 @@ _parts:
     extent: "-20037508,-20037508,20037508,20037508"
 
 Stylesheet:
-  - style/roads.mss
+  - style/railtrails.mss
 Layer:
   - id: railtrails
     geometry: linestring
@@ -51,7 +51,7 @@ Layer:
                   or (highway = 'unclassified' and bicycle = 'yes')
                   or (route = 'bicycle')
                   ))
-                  or (railway in ('railtrail') and not bicycle = 'no') 
+                  or (railway in ('railtrail', 'railtrailrel') and not bicycle = 'no') 
         ) AS rail_trail
     properties:
       minzoom: 3

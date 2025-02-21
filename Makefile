@@ -36,8 +36,11 @@ import:
 render:
 	docker run -p 5432:5432 -e THREADS=24 ${volume_mounts} --shm-size=512m ${docker_tag_name} generate
 
+servetiles:
+	docker run -p 5432:5432 -e THREADS=24 ${volume_mounts} --shm-size=512m ${docker_tag_name} run
+
+
 download:
 	aria2c --dir=$(dir ${input_file}) --out=$(notdir ${input_file}) https://planet.openstreetmap.org/pbf/planet-latest.osm.pbf.torrent
 
-
-.PHONY: nothing synctiles buildfrontend syncfrontend buildcontainer cleanall cleantiles cleandatabase import render
+.PHONY: nothing synctiles buildfrontend syncfrontend dockerimage cleanall cleantiles cleandatabase import render servetiles download
