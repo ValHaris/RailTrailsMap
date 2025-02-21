@@ -3,7 +3,7 @@
 @railtrail-width: 8;
 
 #railtrails {
-  [zoom >= 5] {
+  [zoom >= 4] {
     line/line-color: @railtrail;
     line/line-join: round;
     line/line-cap: round;
