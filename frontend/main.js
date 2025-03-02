@@ -4,11 +4,15 @@ import {Map, View} from 'ol';
 import {XYZ} from 'ol/source';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
-import { TileGrid } from 'ol/tilegrid';
+import {defaults as defaultControls} from 'ol/control/defaults.js';
 import { fromLonLat, toLonLat } from 'ol/proj'; 
+import ScaleLine from 'ol/control/ScaleLine.js';
 
 const map = new Map({
   target: 'map',
+  controls: defaultControls().extend([
+    new ScaleLine()
+  ]),
   layers: [
     new TileLayer({
       source: new OSM(),
