@@ -2,6 +2,7 @@
 import psycopg2
 from itertools import islice
 from tqdm import tqdm
+import argparse
 
 # Database connection parameters
 db_params = {
@@ -35,8 +36,7 @@ def list_to_dict(lst):
         return {}
     return dict(zip(lst[0::2], lst[1::2]))
 
-
-GET_BIKE_ROUTES = "select parts, tags from planet_osm_rels where 'bicycle' = ANY(tags);"
+GET_BIKE_ROUTES = "select parts, tags, id from planet_osm_rels where 'bicycle' = ANY(tags);"
 GET_RAILTRAIL_ROUTES = "select tags from planet_osm_rels where 'railtrail' = ANY(tags);"
 
 def set_ways(conn, batch, update_statement):
@@ -46,29 +46,32 @@ def set_ways(conn, batch, update_statement):
         conn.commit()
 
 if __name__ == "__main__":
-    with get_connection(db_params) as conn:
+    parser = argparse.ArgumentParser(description='Apply bike routes to the database.')
+    parser.add_argument('--dryrun', action='store_true', help='Run the script in dry run mode without making any changes to the database.')
+    args = parser.parse_args()
 
+    with get_connection(db_params) as conn:
         # With the current database schema, tags are just an array of strings, making it difficult to query key-value combinations.
         # Hence this script just searches for keywords in the tags and then checks key-values on python side.
 
-        if any( filter( lambda x: list_to_dict(x[0]).get("route") != "bicycle", query(conn, GET_RAILTRAIL_ROUTES) )):
+        if any(filter(lambda x: list_to_dict(x[0]).get("route") != "bicycle", query(conn, GET_RAILTRAIL_ROUTES))):
             print("*** Found railtrails that are not bicycle routes! ***")
 
-        all_bike_routs = set()
+        all_bike_routes = set()
         bike_trail_routes = set()
-        for row in query(conn, GET_BIKE_ROUTES ):
+        for row in query(conn, GET_BIKE_ROUTES):
             tags = list_to_dict(row[1])
             if tags.get("route") == "bicycle":
-                all_bike_routs.update(row[0])
+                all_bike_routes.update(row[0])
                 if tags.get("railtrail") == "yes":
                     bike_trail_routes.update(row[0])
         
-        print(f"Updating {len(all_bike_routs)} ways for bike routes")
-        for b in tqdm( batched(all_bike_routs, n=1000), total=len(all_bike_routs)//1000 ):
-            set_ways(conn, list(b), "route = 'bicycle'")
+        if not args.dryrun:
+            print(f"Updating {len(all_bike_routes)} ways for bike routes")
+            for b in tqdm(batched(all_bike_routes, n=1000), total=len(all_bike_routes)//1000):
+                set_ways(conn, list(b), "route = 'bicycle'")
 
-
-        print(f"Updating {len(bike_trail_routes)} railtrails")
-        for b in tqdm( batched(bike_trail_routes, n=100), total=len(bike_trail_routes)//100 ):
-            set_ways(conn, list(b), "railway = 'railtrailrel'")
+            print(f"Updating {len(bike_trail_routes)} railtrails")
+            for b in tqdm(batched(bike_trail_routes, n=100), total=len(bike_trail_routes)//100):
+                set_ways(conn, list(b), "route = 'railtrailrel'")
 

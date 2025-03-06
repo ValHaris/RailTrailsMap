@@ -19,6 +19,7 @@ body {
   z-index: 2;
   padding: 0.6em;
   font-family: helvetica,arial;
+  overflow-y: auto; 
 }
 .tt {
   font-family:'Courier New', Courier, monospace;

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Railtrails Map Tests</title>
+</head>
+<body>
+    <ol>
+        <li>
+            <a href="http://localhost:5173/?lon=146.954737&lat=-36.146950&zoom=15.65">Railtrail off Route (way 52555382). 
+                Expected behavior: the part away from the railway line are shown as a inferior trail compared to the part on the abandoned railway.
+            </a>
+        </li>
+        <li>
+            <a href="http://localhost:5173/?lon=12.807519&lat=42.748941&zoom=14.23">Bad Surface</a>
+            Expected behavior: some parts with tracktype=grade3 are shown as inferior trails (but differently from the off-railway path above).
+        </li>
+        <li>
+            <a href="http://localhost:5173/?lon=8.733930&lat=50.148361&zoom=16.50">Railtrail=yes</a> (way 332702286)
+            Expected behavior: the trail is shown as a railtrail.
+        </li>
+    </ol>
+</body>
+</html>

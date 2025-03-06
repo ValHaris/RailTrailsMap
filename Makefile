@@ -1,14 +1,16 @@
 # This makefile doesn't try to manage dependencies.
 # It's main purpose is to have a central place for the various commands and share variables between them.
 
-target_host := user@hostname:/opt/railtrails
+target_host := root@railtrails.ineranves.de:/opt/railtrails
 source_base := /mnt/osm-data
-input_file := /mnt/storage/planet.osm.pbf
+input_file := /mnt/storage/planet-250224.osm.pbf
 docker_tag_name := martin/railtrails
 volume_mounts := -v ${input_file}:/data/region.osm.pbf -v ${source_base}/static:/data/styles/data -v osm-data:/data/database/ -v ${source_base}/tiles:/data/tiles -v ${source_base}/extracted-tiles:/data/extracted-tiles
 
 nothing:
 	@echo "Please specify a target"
+
+sync: synctiles syncfrontend
 
 synctiles:
 	rsync --delete -v -r ${source_base}/extracted-tiles/ ${target_host}/tiles
@@ -37,7 +39,7 @@ render:
 	docker run -p 5432:5432 -e THREADS=24 ${volume_mounts} --shm-size=512m ${docker_tag_name} generate
 
 servetiles:
-	docker run -p 5432:5432 -e THREADS=24 ${volume_mounts} --shm-size=512m ${docker_tag_name} run
+	docker run -p 8888:80 -p 5432:5432 -e THREADS=24 ${volume_mounts} --shm-size=512m ${docker_tag_name} run
 
 
 download:

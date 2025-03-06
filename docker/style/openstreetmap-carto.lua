@@ -319,7 +319,12 @@ function filter_tags_way (keyvalues, numberofkeys)
         keyvalues["railway"] = "abandoned"
     end
 
-    if (keyvalues["railway"] ~= "abandoned" and not keyvalues["highway"]) then
+    if keyvalues["disused:railway"] then
+        keyvalues["railway"] = "disused"
+    end
+
+
+    if (keyvalues["railway"] ~= "abandoned" and keyvalues["railway"] ~= "disused") and not keyvalues["highway"] then
         return 1, keyvalues, polygon, roads
     end
 
