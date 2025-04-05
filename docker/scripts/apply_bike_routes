@@ -73,5 +73,5 @@ if __name__ == "__main__":
 
             print(f"Updating {len(bike_trail_routes)} railtrails")
             for b in tqdm(batched(bike_trail_routes, n=100), total=len(bike_trail_routes)//100):
-                set_ways(conn, list(b), "route = 'railtrailrel'")
+                set_ways(conn, list(b), "route = 'bicycle_railtrail'")
 

@@ -43,7 +43,7 @@ Build the container:
 
 Check the instructions at the [base docker container](https://github.com/Overv/openstreetmap-tile-server).
 
-The style files are integrated into the container, they don't need to be base
+The style files are integrated into the container, they don't need to be passed at runtime.
 
 To pregenerate the tiles, use the new `generate` parameter:
 
