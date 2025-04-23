@@ -3,7 +3,7 @@
 
 Show all cycling paths on former railway lines on map. 
 
-Currently hosted at http://railtrails.ineranves.de
+Currently hosted at https://www.railtrailsmap.net
  
 # Concept
 

@@ -43,7 +43,9 @@ Layer:
         (SELECT
             way, railway, tracktype, route, surface
           FROM planet_osm_line
-          where (railway in ( 'abandoned' , 'disused', 'razed' )
+          where (access is null or access not in('private', 'no'))
+              and (
+                (railway in ( 'abandoned' , 'disused', 'razed' )
                   and (
                     highway = 'cycleway' 
                     or (highway = 'path' and bicycle = 'designated') 
@@ -54,6 +56,7 @@ Layer:
                 )
                 or (route in ('bicycle_railtrail')) 
                 or (railway in ('railtrail'))
+              )
         ) AS rail_trail
     properties:
       minzoom: 3
