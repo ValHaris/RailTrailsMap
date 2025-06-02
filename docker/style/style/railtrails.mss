@@ -1,11 +1,11 @@
 /* For the main linear features, such as roads and railways. */
-@railtrail:rgba(60, 199, 187, 0.6);
-@railtrail-badtrack:rgba(103, 113, 199, 0.6);
+@railtrail:rgb(60, 199, 187);
+@railtrail-badtrack:rgb(103, 113, 199);
 @railtrail-width: 8;
 @railtrail-inner-width: 6;
-@warning: rgba(221, 80, 14, 0.8);
+@warning: rgb(221, 80, 14);
 
-@offrailtrail:rgba(112, 150, 146, 0.4);
+@offrailtrail:rgba(112, 150, 146, 0.7);
 @offrailtrail-width: 5;
 
 #railtrails {

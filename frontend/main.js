@@ -30,7 +30,8 @@ const map = new Map({
               // url: 'http://localhost:8888/tile/{z}/{x}/{y}.png',  // for testing
               maxZoom: 16,
               minZoom: 4
-            })
+            }),
+       opacity: 0.6
     }) 
   ],
   view: new View()
