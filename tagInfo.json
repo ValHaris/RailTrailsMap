@@ -1,0 +1,80 @@
+{
+       "data_format": 1,
+       "data_url": "https://railtrailsmap.net/taginfo.json",
+       "data_updated": "2025110715T000000Z",
+       "project": {
+           "name": "RailTrailsMap",
+           "description": "A map showing cycleways on abandoned railway lines",
+           "project_url": "https://railtrailsmap.net/",
+           "contact_name": "Martin Bickel",
+           "contact_email": "martin@asc-hq.org"
+       },
+       "tags": [
+            {
+                "key": "railway",
+                "value": "abandoned",
+                "object_types": ["way"],
+                "description": "For a way to be rendered, it needs to have both a cycling indicator and a railway indicator. This is one of the railway indicators"
+            },
+            {
+                "key": "railway",
+                "value": "razed",
+                "object_types": ["way"],
+                "description": "For a way to be rendered, it needs to have both a cycling indicator and a railway indicator. This is one of the railway indicators"
+            },
+            {
+                "key": "railtrail",
+                "value": "yes",
+                "object_types": ["way"],
+                "description": "This is a sufficient way to render the way as a railtrail, regardless of other tags on the way."
+            },
+            {
+                "key": "cycleway:type",
+                "value": "railtrail",
+                "object_types": ["way"],
+                "description": "This is a sufficient way to render the way as a railtrail, regardless of other tags on the way."
+            },
+            {
+                "key": "railtrail",
+                "value": "yes",
+                "object_types": ["relation"],
+                "description": "Tagging a cycleway-relation with railtrail=yes indicates that it mostly follows the former railway. Contained ways on the railway bed (determined by tags on the way) will be rendered more prominently than ways that don't show any railway."
+            },
+            {
+                "key": "route",
+                "value": "bicycle",
+                "object_types": ["relation"],
+                "description": "For a way to be rendered, it needs to have both a cycling indicator and a railway indicator. This is one of the cycling indicators"
+            },
+            {
+                "key": "highway",
+                "value": "cycleway",
+                "object_types": ["way"],
+                "description": "For a way to be rendered, it needs to have both a cycling indicator and a railway indicator. This is one of the cycling indicators"
+            },
+            {
+                "key": "highway",
+                "value": "path",
+                "object_types": ["way"],
+                "description": "For a way to be rendered, it needs to have both a cycling indicator and a railway indicator. This is a cycling indicators if combined with bicycle=designated"
+            },
+            {
+                "key": "bicycle",
+                "value": "designated",
+                "object_types": ["way"],
+                "description": "For a way to be rendered, it needs to have both a cycling indicator and a railway indicator. This is a cycling indicators if combined with highway=path"
+            },
+            {
+                "key": "highway",
+                "value": "track",
+                "object_types": ["way"],
+                "description": "For a way to be rendered, it needs to have both a cycling indicator and a railway indicator. This is a cycling indicators if combined with bicycle=yes or a smooth surface indicator"
+            },
+            {
+                "key": "bicycle",
+                "value": "yes",
+                "object_types": ["way"],
+                "description": "For a way to be rendered, it needs to have both a cycling indicator and a railway indicator. This is a cycling indicators if combined with highway=track"
+            }
+       ]
+   }
