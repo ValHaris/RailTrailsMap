@@ -1,7 +1,7 @@
 {
        "data_format": 1,
        "data_url": "https://railtrailsmap.net/taginfo.json",
-       "data_updated": "2025110715T000000Z",
+       "data_updated": "20251110T000000Z",
        "project": {
            "name": "RailTrailsMap",
            "description": "A map showing cycleways on abandoned railway lines",
