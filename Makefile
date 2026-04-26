@@ -43,6 +43,8 @@ servetiles:
 
 
 download:
-	aria2c --dir=$(dir ${input_file}) --out=$(notdir ${input_file}) https://planet.openstreetmap.org/pbf/planet-latest.osm.pbf.torrent
+	aria2c --dir=$(dir ${input_file}) --seed-time=40 --out=$(notdir ${input_file}) https://planet.openstreetmap.org/pbf/planet-latest.osm.pbf.torrent
+	python3 register_file.py --folder=$(dir ${input_file}) --news=frontend/index.html
+
 
 .PHONY: nothing synctiles buildfrontend syncfrontend dockerimage cleanall cleantiles cleandatabase import render servetiles download
